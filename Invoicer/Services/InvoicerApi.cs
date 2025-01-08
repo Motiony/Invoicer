@@ -4,14 +4,13 @@ using Invoicer.Services.Impl;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Linq;
 
 namespace Invoicer.Services
 {
     public class InvoicerApi : IInvoicerApi
     {
         public Invoice Invoice { get; protected set; }
-        
+
         public static string DefaultReference
         {
             get
@@ -27,12 +26,14 @@ namespace Invoicer.Services
             string currency = "£"
             )
         {
-            Invoice = new Invoice();
-            Invoice.Title = "Invoice";
-            Invoice.PageSize = size;
-            Invoice.PageOrientation = orientation;
-            Invoice.Currency = currency;
-            Invoice.BillingDate = DateTime.Now;
+            Invoice = new Invoice
+            {
+                Title = "Invoice",
+                PageSize = size,
+                PageOrientation = orientation,
+                Currency = currency,
+                BillingDate = DateTime.Now
+            };
             Invoice.DueDate = Invoice.BillingDate.AddDays(14);
             Invoice.Reference = DefaultReference;
         }
@@ -127,7 +128,7 @@ namespace Invoicer.Services
         {
             if (filename == null || !System.IO.Path.HasExtension(filename))
                 filename = System.IO.Path.ChangeExtension(Invoice.Reference, "pdf");
-           new PdfInvoice(Invoice).Save(filename, password);
+            new PdfInvoice(Invoice).Save(filename, password);
         }
     }
 }

@@ -3,8 +3,6 @@ using Invoicer.Models;
 using MigraDoc.DocumentObjectModel;
 using MigraDoc.DocumentObjectModel.Shapes;
 using MigraDoc.DocumentObjectModel.Tables;
-using System;
-using System.Linq;
 
 namespace Invoicer.Services.Impl
 {

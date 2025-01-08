@@ -1,7 +1,6 @@
 ﻿using Invoicer.Models;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Invoicer.Services
 {
@@ -16,7 +15,7 @@ namespace Invoicer.Services
         /// Set a custom html color to personalize the document background
         /// </summary>
         IInvoicerOptions BackColor(string color);
-        
+
         /// <summary>
         /// Set a custom html color to personalize the document text
         /// </summary>
@@ -55,12 +54,12 @@ namespace Invoicer.Services
         /// Set the company address
         /// </summary>
         IInvoicerOptions Company(Address address);
-        
+
         /// <summary>
         /// Set the client address.
         /// </summary>
         IInvoicerOptions Client(Address address);
-        
+
         /// <summary>
         /// Switch the position of the company address (default left).
         /// </summary>

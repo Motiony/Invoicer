@@ -1,12 +1,6 @@
-﻿using Invoicer.Helpers;
-using MigraDoc.DocumentObjectModel;
+﻿using MigraDoc.DocumentObjectModel;
 using MigraDoc.DocumentObjectModel.Shapes;
 using MigraDoc.DocumentObjectModel.Tables;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Invoicer.Helpers
 {
@@ -15,17 +9,27 @@ namespace Invoicer.Helpers
         public static Color BackColorFromHtml(string hex)
         {
             if (hex == null)
+            {
                 return Colors.LightYellow;
+            }
             else
-                return new Color((uint)System.Drawing.ColorTranslator.FromHtml(hex).ToArgb());
+            {
+                var color = ColorConverter.FromHex(hex);
+                return new Color(color.A, color.R, color.G, color.B);
+            }
         }
-        
+
         public static Color TextColorFromHtml(string hex)
         {
             if (hex == null)
+            {
                 return Colors.Black;
+            }
             else
-                return new Color((uint)System.Drawing.ColorTranslator.FromHtml(hex).ToArgb());
+            {
+                var color = ColorConverter.FromHex(hex);
+                return new Color(color.A, color.R, color.G, color.B);
+            }
         }
 
         public static double PageWidth(this Section section)
@@ -36,7 +40,7 @@ namespace Invoicer.Helpers
         public static double PageWidth(this Document document)
         {
             Unit width, height;
-            
+
             PageSetup.GetPageSize(document.DefaultPageSetup.PageFormat, out width, out height);
             if (document.DefaultPageSetup.Orientation == Orientation.Landscape)
                 Utils.Swap<Unit>(ref width, ref height);

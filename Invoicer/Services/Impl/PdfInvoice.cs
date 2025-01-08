@@ -1,10 +1,11 @@
-﻿using Invoicer.Helpers;
+﻿using Invoicer.FontResolvers;
+using Invoicer.Helpers;
 using Invoicer.Models;
 using MigraDoc.DocumentObjectModel;
 using MigraDoc.Rendering;
+using PdfSharp.Fonts;
 using PdfSharp.Pdf.Security;
 using System;
-using System.Linq;
 
 namespace Invoicer.Services.Impl
 {
@@ -51,9 +52,11 @@ namespace Invoicer.Services.Impl
         {
             get
             {
-                Border bottomLine = new Border();
-                bottomLine.Width = new Unit(0.5);
-                bottomLine.Color = MigraDocHelpers.TextColorFromHtml(Invoice.TextColor);
+                Border bottomLine = new Border
+                {
+                    Width = new Unit(0.5),
+                    Color = MigraDocHelpers.TextColorFromHtml(Invoice.TextColor)
+                };
                 return bottomLine;
             }
         }
@@ -68,8 +71,10 @@ namespace Invoicer.Services.Impl
         {
             CreateDocument();
 
-            PdfDocumentRenderer renderer = new PdfDocumentRenderer(true, PdfSharp.Pdf.PdfFontEmbedding.Always);
-            renderer.Document = Pdf;
+            PdfDocumentRenderer renderer = new PdfDocumentRenderer
+            {
+                Document = Pdf
+            };
             renderer.RenderDocument();
             if (!string.IsNullOrEmpty(password))
                 SetPassword(renderer, password);
@@ -78,14 +83,13 @@ namespace Invoicer.Services.Impl
 
         private void CreateDocument()
         {
-            Pdf.DefaultPageSetup.PageFormat = InvoiceFormat;
-            Pdf.DefaultPageSetup.Orientation = InvoiceOrientation;
-            Pdf.DefaultPageSetup.TopMargin = 125;
+            GlobalFontSettings.FontResolver = new OpenSansFontResolver();
             Pdf.Info.Title = Invoice.Title;
-
             DefineStyles();
-
-            Pdf.AddSection();
+            var section = Pdf.AddSection();
+            section.PageSetup.PageFormat = InvoiceFormat;
+            section.PageSetup.Orientation = InvoiceOrientation;
+            section.PageSetup.TopMargin = 125;
             HeaderSection();
             AddressSection();
             BillingSection();
@@ -93,12 +97,11 @@ namespace Invoicer.Services.Impl
             FooterSection();
         }
 
-        private void SetPassword(PdfDocumentRenderer renderer, string password)
+        private static void SetPassword(PdfDocumentRenderer renderer, string password)
         {
             PdfSecuritySettings securitySettings = renderer.PdfDocument.SecuritySettings;
             securitySettings.OwnerPassword = password;
             securitySettings.UserPassword = password;
-            securitySettings.PermitAccessibilityExtractContent = false;
             securitySettings.PermitAnnotations = false;
             securitySettings.PermitAssembleDocument = false;
             securitySettings.PermitExtractContent = false;
@@ -110,8 +113,8 @@ namespace Invoicer.Services.Impl
 
         private void DefineStyles()
         {
-            MigraDoc.DocumentObjectModel.Style style = Pdf.Styles["Normal"];
-            style.Font.Name = "Calibri";
+            Style style = Pdf.Styles["Normal"];
+            style.Font.Name = "OpenSans";
 
             style = Pdf.Styles.AddStyle("H1-20", "Normal");
             style.Font.Size = 20;
